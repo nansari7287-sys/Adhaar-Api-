@@ -1,229 +1,95 @@
 from flask import Flask, request, jsonify
-from datetime import datetime, timezone
+import requests
+import hashlib
+from datetime import datetime
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import pad
+import base64
 import os
-import uuid
-import re
 
-app = Flask(__name__)
+app = Flask(name)
 
-# ============================================================
-# Frexxy × 𝑫𝒓𝒂𝒌𝒐𝑿𝑵𝒂𝒆𝒆𝒎
-# ============================================================
+--- Configuration ---
 
-APP_NAME = "Frexxy API"
-DEVELOPER = "𝑫𝒓𝒂𝒌𝒐𝑿𝑵𝒂𝒆𝒆𝒎"
-VERSION = "1.0.0"
-MODE = "TEST"
+SECRET_SEED = "APIMPDS$9712Q"
+IV_STR = "AP4123IMPDS@12768F"
+API_URL = 'http://impds.nic.in/impdsmobileapi/api/getrationcard'
+TOKEN = "91f01a0a96c526d28e4d0c1189e80459"
+USER_AGENT = 'Dalvik/2.1.0 (Linux; U; Android 14; 22101320I Build/UKQ1.240624.001)'
 
-# ============================================================
-# API KEY
-# ============================================================
-# Change this value to your own private key.
-# Better: set FREXXY_API_KEY as an environment variable.
+✅ আপনার নতুন এক্সেস কী (Access Key)
 
-ACCESS_KEY = os.getenv(
-    "FREXXY_API_KEY",
-    "Frexxy-Test-Key"
-)
+ACCESS_KEY = "nexxon07"
 
+--- Utility Functions ---
 
-# ============================================================
-# Response Helper
-# ============================================================
+def get_md5_hex(input_string: str) -> str:
+return hashlib.md5(input_string.encode('iso-8859-1')).hexdigest()
 
-def api_response(success, message, data=None, status=200):
-    result = {
-        "success": success,
-        "service": APP_NAME,
-        "developer": DEVELOPER,
-        "version": VERSION,
-        "mode": MODE,
-        "timestamp": datetime.now(timezone.utc).isoformat()
-    }
+def generate_session_id() -> str:
+return "28" + datetime.now().strftime("%Y%m%d%H%M%S")
 
-    if message:
-        result["message"] = message
+def encrypt_payload(plaintext_id: str, session_id: str) -> str:
+inner_hash = get_md5_hex(SECRET_SEED)
+key_material = get_md5_hex(inner_hash + session_id)
+aes_key = hashlib.sha256(key_material.encode('utf-8')).digest()[:16]
+iv = IV_STR.encode('utf-8')[:16]
 
-    if data is not None:
-        result["data"] = data
+cipher = AES.new(aes_key, AES.MODE_CBC, iv)  
+padded_data = pad(plaintext_id.encode('utf-8'), AES.block_size, style='pkcs7')  
+ciphertext = cipher.encrypt(padded_data)  
+  
+return base64.b64encode(base64.b64encode(ciphertext)).decode('utf-8')
 
-    return jsonify(result), status
+--- Routes ---
 
-
-# ============================================================
-# API Key Verification
-# ============================================================
-
-def check_api_key():
-    key = request.headers.get("X-API-Key", "").strip()
-
-    # Query parameter support
-    if not key:
-        key = request.args.get("key", "").strip()
-
-    return key == ACCESS_KEY
-
-
-# ============================================================
-# Home
-# ============================================================
-
-@app.route("/", methods=["GET"])
+@app.route('/', methods=['GET'])
 def home():
+return jsonify({
+"status": "Aadhaar to Family API is Live",
+"developer": "CREATOR SHYAMCHAND",
+"usage": "/fetch?aadhaar=XXXXXXXXXXXX&key=nexxon07"
+})
 
-    return api_response(
-        True,
-        "Frexxy API is live",
-        {
-            "name": APP_NAME,
-            "developer": DEVELOPER,
-            "version": VERSION,
-            "status": "online",
-            "endpoints": {
-                "health": "/health",
-                "test": "/fetch"
-            }
-        }
-    )
-
-
-# ============================================================
-# Health Check
-# ============================================================
-
-@app.route("/health", methods=["GET"])
-def health():
-
-    return api_response(
-        True,
-        "API is healthy",
-        {
-            "status": "online"
-        }
-    )
-
-
-# ============================================================
-# TEST FETCH ENDPOINT
-# ============================================================
-
-@app.route("/fetch", methods=["GET"])
+@app.route('/fetch', methods=['GET'])
 def fetch():
+try:
+# ✅ এক্সেস কী চেক
+key = request.args.get("key", "").strip()
+if key != ACCESS_KEY:
+return jsonify({"error": "Invalid API key"}), 401
 
-    # --------------------------------------------------------
-    # API KEY
-    # --------------------------------------------------------
+aadhaar_input = request.args.get("aadhaar", "").strip()  
+    if not aadhaar_input or len(aadhaar_input) != 12 or not aadhaar_input.isdigit():  
+        return jsonify({"error": "Invalid format. Must be 12 digits."}), 400  
 
-    if not check_api_key():
+    session_id = generate_session_id()  
+    encrypted_id = encrypt_payload(aadhaar_input, session_id)  
 
-        return api_response(
-            False,
-            "Invalid API key",
-            status=401
-        )
+    headers = {  
+        'User-Agent': USER_AGENT,  
+        'Content-Type': 'application/json; charset=utf-8'  
+    }  
+    payload = {  
+        "id": encrypted_id,  
+        "idType": "U",  
+        "userName": "IMPDS",  
+        "token": TOKEN,  
+        "sessionId": session_id  
+    }  
 
-    # --------------------------------------------------------
-    # TEST ID
-    # --------------------------------------------------------
+    response = requests.post(API_URL, headers=headers, json=payload, timeout=15)  
+    data = response.json()  
+      
+    # আপনার কাস্টম ক্রেডিট  
+    if isinstance(data, dict):  
+        data["credits"] = "Developed by CREATOR 𝑫𝒓𝒂𝒌𝒐𝑿𝑵𝒂𝒆𝒆𝒎 | @frexxxy"  
+          
+    return jsonify(data)  
 
-    test_id = request.args.get("aadhaar", "").strip()
+except Exception as e:  
+    return jsonify({"error": str(e)}), 500
 
-    if not test_id:
-
-        return api_response(
-            False,
-            "Missing aadhaar parameter",
-            status=400
-        )
-
-    if not re.fullmatch(r"[0-9]{12}", test_id):
-
-        return api_response(
-            False,
-            "Invalid format. Must contain exactly 12 digits.",
-            status=400
-        )
-
-    # --------------------------------------------------------
-    # TEST REQUEST
-    # --------------------------------------------------------
-
-    request_id = str(uuid.uuid4())
-
-    # Mask the identifier.
-    masked_id = "********" + test_id[-4:]
-
-    return api_response(
-        True,
-        "Test request processed successfully",
-        {
-            "request_id": request_id,
-            "identifier": masked_id,
-            "lookup_performed": False,
-            "credits": f"Powered by {DEVELOPER}"
-        }
-    )
-
-
-# ============================================================
-# 404
-# ============================================================
-
-@app.errorhandler(404)
-def not_found(error):
-
-    return api_response(
-        False,
-        "Endpoint not found",
-        status=404
-    )
-
-
-# ============================================================
-# 405
-# ============================================================
-
-@app.errorhandler(405)
-def method_not_allowed(error):
-
-    return api_response(
-        False,
-        "Method not allowed",
-        status=405
-    )
-
-
-# ============================================================
-# 500
-# ============================================================
-
-@app.errorhandler(500)
-def server_error(error):
-
-    return api_response(
-        False,
-        "Internal server error",
-        status=500
-    )
-
-
-# ============================================================
-# Vercel
-# ============================================================
+Vercel handler
 
 app_handler = app
-
-
-# ============================================================
-# Local Run
-# ============================================================
-
-if __name__ == "__main__":
-
-    port = int(os.getenv("PORT", 5000))
-
-    app.run(
-        host="0.0.0.0",
-        port=port,
-        debug=False
-    )
