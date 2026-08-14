@@ -1,65 +1,71 @@
-# ⚡ Frexxy API
+<div align="center">
 
-### 𝑫𝒓𝒂𝒌𝒐𝑿𝑵𝒂𝒆𝒆𝒎
+# 🚀 Aadhaar Family API
 
-<p align="center">
-  <b>Fast • Lightweight • Secure • Developer Friendly</b>
-</p>
+### *Enterprise-Grade Aadhaar to Family Details Service*
 
-<p align="center">
-  A Flask-based REST API project designed for clean API integration,
-  authentication, request validation and cloud deployment.
-</p>
+![Version](https://img.shields.io/badge/version-2.0.0-blue?style=for-the-badge)
+![Python](https://img.shields.io/badge/python-3.9+-green?style=for-the-badge&logo=python)
+![Flask](https://img.shields.io/badge/flask-2.3.3-red?style=for-the-badge&logo=flask)
+![Vercel](https://img.shields.io/badge/deployed-vercel-black?style=for-the-badge&logo=vercel)
+![License](https://img.shields.io/badge/license-MIT-yellow?style=for-the-badge)
+
+---
+  
+### ✨ Developed with ❤️ by **𝙁𝙧𝙚𝙭𝙭𝙮** & **𝑫𝒓𝒂𝒌𝒐𝑿𝑵𝒂𝒆𝒆𝒎**
+
+</div>
 
 ---
 
-## 🚀 Overview
+## 📋 **Table of Contents**
 
-**Frexxy API** is a lightweight Python/Flask API project built with a
-clean and deployment-friendly architecture.
-
-The project focuses on:
-
-- ⚡ Fast API responses
-- 🔐 API-key authentication
-- 🔒 Secure configuration
-- 🧩 Modular structure
-- 🌐 External API integration
-- ☁️ Vercel deployment
-- 🛡️ Request validation
-- 📦 JSON-based responses
-
-> **Project:** Frexxy API  
-> **Brand:** 𝑫𝒓𝒂𝒌𝒐𝑿𝑵𝒂𝒆𝒆𝒎  
-> **Version:** 1.0.0  
-> **Runtime:** Python  
-> **Framework:** Flask
+- [🌟 Features](#-features)
+- [📊 API Endpoints](#-api-endpoints)
+- [🚀 Quick Start](#-quick-start)
+- [📖 API Documentation](#-api-documentation)
+- [🔐 Authentication](#-authentication)
+- [📝 Error Codes](#-error-codes)
+- [💻 Local Development](#-local-development)
+- [🌐 Deployment](#-deployment)
+- [🛡️ Security](#️-security)
+- [🤝 Contributing](#-contributing)
+- [📜 License](#-license)
 
 ---
 
-# ✨ Features
+## 🌟 **Features**
 
-| Feature | Status |
-|---|:---:|
-| Flask REST API | ✅ |
-| API Key Authentication | ✅ |
-| Request Validation | ✅ |
-| JSON Responses | ✅ |
-| AES Encryption Support | ✅ |
-| External API Integration | ✅ |
-| Error Handling | ✅ |
-| Vercel Support | ✅ |
-| Lightweight Architecture | ✅ |
-| Environment Configuration | ✅ |
+| Feature | Description |
+|---------|-------------|
+| 🔐 **Secure Encryption** | AES-256 bit encryption for Aadhaar numbers |
+| ⚡ **High Performance** | Response time < 500ms average |
+| 🛡️ **Rate Limiting** | Built-in protection against abuse |
+| 📊 **Real-time Metrics** | Performance monitoring & execution time |
+| 🔍 **Comprehensive Validation** | Input validation for Aadhaar format |
+| 📖 **Auto Documentation** | Interactive API documentation |
+| 🎨 **Professional Branding** | Custom developer branding |
+| 🌐 **Cloud Ready** | Deployed on Vercel for scalability |
 
 ---
 
-# 🧱 Technology Stack
+## 📊 **API Endpoints**
 
-### Backend
+### **🏠 Home -** `GET /`
+Get API information and available endpoints.
 
-```text
-Python
-Flask
-Requests
-PyCryptodome
+```json
+{
+  "app_name": "🚀 Aadhaar Family API",
+  "version": "v2.0.0",
+  "developer": "𝙁𝙧𝙚𝙭𝙭𝙮",
+  "team": "𝑫𝒓𝒂𝒌𝒐𝑿𝑵𝒂𝒆𝒆𝒎",
+  "status": "✅ API is Live & Running",
+  "endpoints": {
+    "/": "🏠 API Information",
+    "/fetch": "🔍 Fetch Family Details",
+    "/health": "💚 Health Check",
+    "/status": "📊 System Status",
+    "/docs": "📖 Documentation"
+  }
+}
