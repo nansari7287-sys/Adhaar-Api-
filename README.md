@@ -1,36 +1,65 @@
-# Frexxy API
+# ⚡ Frexxy API
 
 ### 𝑫𝒓𝒂𝒌𝒐𝑿𝑵𝒂𝒆𝒆𝒎
 
-A lightweight Flask-based REST API designed with a clean structure, API-key authentication, external API integration, encrypted request handling, and Vercel deployment support.
+<p align="center">
+  <b>Fast • Lightweight • Secure • Developer Friendly</b>
+</p>
+
+<p align="center">
+  A Flask-based REST API project designed for clean API integration,
+  authentication, request validation and cloud deployment.
+</p>
 
 ---
 
-## ✨ Features
+## 🚀 Overview
 
-- ⚡ Flask REST API
+**Frexxy API** is a lightweight Python/Flask API project built with a
+clean and deployment-friendly architecture.
+
+The project focuses on:
+
+- ⚡ Fast API responses
 - 🔐 API-key authentication
-- 🔒 AES-based request encryption
+- 🔒 Secure configuration
+- 🧩 Modular structure
 - 🌐 External API integration
+- ☁️ Vercel deployment
 - 🛡️ Request validation
-- ⏱️ Request timeout handling
-- 📦 JSON responses
-- ☁️ Vercel deployment support
-- 🧩 Simple project structure
-- 🏷️ Frexxy branding
-- 🚀 Lightweight and fast
+- 📦 JSON-based responses
+
+> **Project:** Frexxy API  
+> **Brand:** 𝑫𝒓𝒂𝒌𝒐𝑿𝑵𝒂𝒆𝒆𝒎  
+> **Version:** 1.0.0  
+> **Runtime:** Python  
+> **Framework:** Flask
 
 ---
 
-## 📁 Project Structure
+# ✨ Features
+
+| Feature | Status |
+|---|:---:|
+| Flask REST API | ✅ |
+| API Key Authentication | ✅ |
+| Request Validation | ✅ |
+| JSON Responses | ✅ |
+| AES Encryption Support | ✅ |
+| External API Integration | ✅ |
+| Error Handling | ✅ |
+| Vercel Support | ✅ |
+| Lightweight Architecture | ✅ |
+| Environment Configuration | ✅ |
+
+---
+
+# 🧱 Technology Stack
+
+### Backend
 
 ```text
-Frexxy-API/
-│
-├── api/
-│   └── index.py
-│
-├── requirements.txt
-├── vercel.json
-├── README.md
-└── .gitignore
+Python
+Flask
+Requests
+PyCryptodome
